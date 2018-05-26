@@ -1,0 +1,19 @@
+{
+    "name": "aris/anila",
+    "description": "Anila theme from Aristech",
+    "type": "project",
+    "license": "GPL",
+    "authors": [
+        {
+            "name": "Aristech",
+            "email": "aristech.gr@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Inc\\": "./inc"
+        }
+    }
+}
