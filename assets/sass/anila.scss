@@ -197,7 +197,7 @@ body {
   z-index: 5000;
   -webkit-transition: 0.3s;
   transition: 0.3s;
-  #marker {
+  #marker,#marker2 {
     position: fixed;
     display: none;
     height: 3px;
@@ -215,7 +215,8 @@ body {
     }
   }
 
-  #primary-menu {
+  #primary-menu,
+  #secondary-menu {
     ul {
       li {
         padding: 0 1.5rem;
@@ -282,6 +283,7 @@ body {
   height: calc(100vw - 40rem);
   position: relative;
   z-index: 500;
+  max-height: 100vh;
   // -webkit-filter: blur(5px);
   // -moz-filter: blur(5px);
   // -o-filter: blur(5px);
@@ -299,6 +301,10 @@ body {
   max-width: none;
   z-index: 5000;
   transition: background-color 1.6s;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
   &.open {
     background-color: #161a5a;
   }
@@ -425,38 +431,38 @@ body {
   }
 
   .sidebar-socials {
-    height: 14rem;
-    margin-top: 1rem;
+    height: 24rem;
+    margin-top: 4rem;
+    margin-bottom: -5rem;
     ul {
       padding: 0;
       height: 100%;
       display: flex;
       flex-direction: column;
       justify-content: space-evenly;
-       
-        li {
-          list-style: none;
-          a {
-            svg.simple-svg {
-              width: 4em;
-              height: 4em;
-              stroke: $secondary;
-              cursor: pointer;
 
-              path {
-                fill: $secondary;
-                transition: all 200ms linear;
-              }
-              &:hover path {
-                fill: $primary;
-                stroke: transparent;
-              }
+      li {
+        list-style: none;
+        a {
+          svg.simple-svg {
+            width: 4em;
+            height: 4em;
+            stroke: $secondary;
+            cursor: pointer;
+
+            path {
+              fill: $secondary;
+              transition: all 200ms linear;
+            }
+            &:hover path {
+              fill: $primary;
+              stroke: transparent;
             }
           }
         }
       }
     }
- 
+  }
 }
 @media (min-width: 577px) {
   .sidebar {

@@ -19,7 +19,12 @@ class EnqueueAdmin
     }
     public function enqueueAdmin($hook) {
         //echo $hook;
-        if ( ('toplevel_page_anila' != $hook) && ('anila_page_anila_sidebar' != $hook) && ('anila_page_anila_css' != $hook ) && ('anila_page_anila_contact' != $hook )  ){
+        if ( ('toplevel_page_anila' != $hook) 
+            && ('anila_page_anila_sidebar' != $hook) 
+            && ('anila_page_anila_css' != $hook ) 
+            && ('anila_page_anila_contact' != $hook ) 
+            && ('anila_page_anila_slider' != $hook )  )
+        {
             return;
         } 
         wp_register_style( 'admin', $this->themeUri . '/assets/min/css/admin.min.css', array(), '1.0.0', 'all' );

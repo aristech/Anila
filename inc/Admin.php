@@ -14,7 +14,7 @@ if ( file_exists( get_template_directory(). '/vendor/autoload.php')) {
 
 use Inc\settings\MenuOptions;
 use Inc\settings\Settings;
-use Inc\settings\RegisterBlocks;
+//use Inc\settings\RegisterBlocks;
 use Inc\settings\EnqueueAdmin;
 use Inc\settings\EnqueueWp;
 
@@ -28,7 +28,7 @@ class Admin {
 
         $this   ->  MenuOptions         =   new MenuOptions;
         $this   ->  Settings            =   new Settings;
-        $this   ->  RegisterBlocks      =   new RegisterBlocks;
+        //$this   ->  RegisterBlocks      =   new RegisterBlocks;
         $this   ->  enqueueAdmin        =   new EnqueueAdmin;
         $this   ->  enqueueWp           =   new EnqueueWp;
         $this   ->  theme               =   get_template_directory();
@@ -49,8 +49,8 @@ class Admin {
         add_action( 'after_setup_theme', array($this, 'anila_setup'));
         add_filter('upload_mimes', array($this, 'cc_mime_types'));
         add_theme_support( 'post-thumbnails' );
-        add_action( 'enqueue_block_assets', array($this->RegisterBlocks,'my_block_cgb_block_assets' ));
-        add_action( 'enqueue_block_editor_assets', array($this->RegisterBlocks, 'my_block_cgb_editor_assets' ));
+        //add_action( 'enqueue_block_assets', array($this->RegisterBlocks,'my_block_cgb_block_assets' ));
+        //add_action( 'enqueue_block_editor_assets', array($this->RegisterBlocks, 'my_block_cgb_editor_assets' ));
         if( @$this->Settings->contact == 1) {
             add_action( 'init', array($this->Settings,'contact_cpt'));
             add_filter( 'manage_anila_contact_posts_columns', array($this->Settings, 'set_contact_columns'));
@@ -86,9 +86,11 @@ class Admin {
     // Navigation menus
     function anila_setup() 
     {
+        add_theme_support( 'title-tag' );
+        load_theme_textdomain( 'anila' );
         add_theme_support( 'align-wide' );
-        register_nav_menu( 'primary', 'Header Navigation Menu Left' );
-        register_nav_menu( 'secondary', 'Header Navigation Menu Right' );
+        register_nav_menu( 'primary', 'Header Primary Navigation Menu ' );
+        register_nav_menu( 'secondary', 'Header Secondary Navigation Menu' );
     }
     
     // Support for svg

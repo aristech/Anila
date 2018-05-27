@@ -28,9 +28,9 @@ class RegisterBlocks
                 // Styles.
                 wp_enqueue_style(
                     'my_block-cgb-style-css', // Handle.
-                    $this->themeUri . '/blocks/my-block/dist/blocks.style.build.css', // Block style CSS.
+                    $this->themeUri . '/blocks/my-block/dist/style.css', // Block style CSS.
                     array( 'wp-blocks' ) // Dependency to include the CSS after it.
-                    // filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.style.build.css' ) // Version: filemtime — Gets file modification time.
+                    // filemtime( plugin_dir_path( __DIR__ ) . 'dist/style.css' ) // Version: filemtime — Gets file modification time.
                 );
             } // End function my_block_cgb_block_assets().
             
@@ -59,9 +59,9 @@ class RegisterBlocks
                 // Styles.
                 wp_enqueue_style(
                     'my_block-cgb-block-editor-css', // Handle.
-                    $this->themeUri . '/blocks/my-block/dist/blocks.editor.build.css', // Block editor CSS.
+                    $this->themeUri . '/blocks/my-block/dist/editor.css', // Block editor CSS.
                     array( 'wp-edit-blocks' ) // Dependency to include the CSS after it.
-                    // filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.editor.build.css' ) // Version: filemtime — Gets file modification time.
+                    // filemtime( plugin_dir_path( __DIR__ ) . 'dist/editor.css' ) // Version: filemtime — Gets file modification time.
                 );
             } // End function my_block_cgb_editor_assets().
             

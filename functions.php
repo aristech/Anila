@@ -11,7 +11,7 @@ function social_display()
     $socials   =   array(
         'facebook'  => esc_attr( get_option( 'anila_facebook' ) ),
         'twitter'   => esc_attr( get_option( 'anila_twitter' ) ),
-        'google-plus'    => esc_attr( get_option( 'anila_google' ) ),
+        'google'    => esc_attr( get_option( 'anila_google' ) ),
     ); 
     $output = '<ul>';
     foreach ($socials as $key => $value) 

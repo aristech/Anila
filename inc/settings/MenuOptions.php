@@ -27,8 +27,21 @@ class MenuOptions
         add_submenu_page('anila', 'Theme Options', 'Settings', 'manage_options', 'anila', array($this,'themeSettings'));
         add_submenu_page( 'anila', 'Contact Options', 'Contact', 'manage_options', 'anila_contact', array($this, 'contactSettings'));
         add_submenu_page( 'anila', 'Sidebar Options', 'Sidebar', 'manage_options', 'anila_sidebar', array($this, 'sidebarSettings'));
+        add_submenu_page( 'anila', 'Slider Options', 'Slider', 'manage_options', 'anila_slider', array($this, 'sliderSettings'));
         add_submenu_page('anila', 'Css Options', 'Custom Css', 'manage_options', 'anila_css', array($this,'cssSettings'));
         add_action( 'admin_init', array($this->settings, 'settings'));
+    }
+
+
+
+    function themeSettings()
+    {
+        require_once $this->theme . '/inc/adminPages/ThemeSettings.php';
+    }
+
+    function contactSettings()
+    {
+        require_once $this->theme . '/inc/adminPages/ContactSettings.php';
     }
 
     function sidebarSettings()
@@ -36,19 +49,14 @@ class MenuOptions
         require_once $this->theme . '/inc/adminPages/SidebarSettings.php';
     }
 
-    function themeSettings()
+    function sliderSettings()
     {
-        require_once $this->theme . '/inc/adminPages/ThemeSettings.php';
+        require_once $this->theme . '/inc/adminPages/SliderSettings.php';
     }
-
+    
     function cssSettings()
     {
         require_once $this->theme . '/inc/adminPages/CssSettings.php';
-    }
-
-    function contactSettings()
-    {
-        require_once $this->theme . '/inc/adminPages/ContactSettings.php';
     }
     
 }    

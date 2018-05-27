@@ -21,11 +21,13 @@ class Settings
         $this   ->  theme               =   get_template_directory();
         $this   ->  logo                =   get_option( 'anila_logo' );
         $this   ->  logosize            =   get_option( 'anila_logosize' );
+        $this   ->  slidersize            =   get_option( 'anila_slidersize' );
         $this   ->  header_image        =   get_option( 'anila_header_image' );
         $this   ->  header_title        =   get_option( 'anila_header_title' );
         $this   ->  sticky              =   get_option( 'anila_sticky' );
         $this   ->  shade              =   get_option( 'anila_shade_menu' );
         $this   ->  sidebar             =   get_option( 'anila_activate_sidebar' ); 
+        $this   ->  slider             =   get_option( 'anila_activate_slider' ); 
         $this   ->  profile_pic         =   get_option( 'anila_profile_picture' );
         $this   ->  title               =   esc_attr( get_option( 'anila_title' ) );
         $this   ->  description         =   esc_attr( get_option( 'anila_description' ) ); 
@@ -60,6 +62,17 @@ class Settings
         add_settings_field( 'header-title', 'Header Title', array($this, 'header_title'), 'anila', 'anila_general_settings' );
 
 
+
+
+        //Contact Form Options
+        register_setting( 'anila-contact-group', 'anila_activate_contact' );
+
+        add_settings_section( 'contact-section', '', '', 'anila_contact' );
+
+        add_settings_field( 'activate-form', 'Add or remove custom contact form', array($this, 'activate_contact'), 'anila_contact', 'contact-section' );
+
+
+
         //Sidebar Options
         register_setting( 'anila-sidebar-group', 'anila_activate_sidebar' );
         register_setting( 'anila-sidebar-group', 'anila_profile_picture' );
@@ -71,22 +84,26 @@ class Settings
 
 
         add_settings_section( 'anila_sidebar_settings', 'Sidebar Options', '', 'anila_sidebar' );
-        //add_settings_section( id, title, callback, page )
+
 
         add_settings_field( 'activate-sidebar', 'Activate Sidebar', array($this, 'activate_sidebar'), 'anila_sidebar', 'anila_sidebar_settings');
         add_settings_field( 'profile-picture', 'Picture', array($this, 'profile_picture'), 'anila_sidebar', 'anila_sidebar_settings');
         add_settings_field( 'sidebar-name', 'Text', array($this, 'sidebar_name'), 'anila_sidebar', 'anila_sidebar_settings');
         add_settings_field( 'sidebar-socials', 'Socials', array($this, 'social_settings'), 'anila_sidebar', 'anila_sidebar_settings' );
-        //add_settings_field( id, title, callback, page, section, args )
 
 
-        //Contact Form Options
-        register_setting( 'anila-contact-group', 'anila_activate_contact' );
 
-        add_settings_section( 'contact-section', '', '', 'anila_contact' );
 
-        add_settings_field( 'activate-form', 'Add or remove custom contact form', array($this, 'activate_contact'), 'anila_contact', 'contact-section' );
+        //Slider Options
+        register_setting( 'anila-slider-group', 'anila_activate_slider' );
+        register_setting( 'anila-slider-group', 'anila_slidersize' );
 
+        add_settings_section( 'anila_slider_settings', 'Slider Options', '', 'anila_slider' );
+        add_settings_section( 'anila_slider_content', 'Slider Content', '', 'anila_slider' );
+
+        add_settings_field( 'activate-slider', 'Activate Slider', array($this, 'activate_slider'), 'anila_slider', 'anila_slider_settings');
+        add_settings_field( 'items-slider', 'Slider Items', array($this, 'slider_items'), 'anila_slider', 'anila_slider_content');
+        //add_settings_field( 'header-image', 'Global Header Image', array($this, 'header_image'), 'anila', 'anila_slider_content' );
 
         //CSS Options
         register_setting( 'anila-css-group', 'anila_css', array($this, 'sanitize_css') );
@@ -299,6 +316,28 @@ function social_settings()
         echo '<input class="regular-text" type="text" name="anila_'.$key.'" placeholder="anila_'.$key.' name" value="'. $value .'"/><p class="description">Your '.$key.' name </p>';
     }
 }
+
+
+
+/*  ======================
+    Theme Options Slider
+    ======================
+ */
+
+function activate_slider()
+{
+    $checked = ( @$this->slider == 1 ? 'checked' : '');
+    echo '<input type="checkbox" class="ios8-switch" id="activate_slider" name="anila_activate_slider" value="1" '.$checked.' /><label for="activate_slider">Activate Slider</label>';
+}
+
+function slider_items()
+{
+    if (@$this->slider == 1 ) {
+    echo '<input class="text" type="number" name="anila_slidersize" placeholder="How many slider items?" value="'. filter_var($this->slidersize , FILTER_SANITIZE_NUMBER_INT).'"/>';
+    }
+}
+
+
 
 /*  ======================
     Theme Options CSS

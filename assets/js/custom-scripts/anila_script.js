@@ -24,13 +24,13 @@ jQuery(document).ready(function($) {
   $('.menu-item').mouseover( function() { 
     // $('.active').removeClass('active');
     // $(this).addClass('active');
-    var top = $(this).height() - 20;
+    var top = $(this).height() - 15;
     var left = $(this).offset().left + 25;
     var width = $(this).width();
     $('#marker').stop().animate( { top: top, left: left, width: width }, 1000 );
   });
   $(".menu-item").mouseleave(function () { 
-    var top = $('.current_page_item.active').height() - 20;
+    var top = $('.current_page_item.active').height() - 15;
     var left = $('.current_page_item.active').offset().left + 25;
     var width = $('.current_page_item.active').width();
     $('#marker').stop().animate( { top: top, left: left, width: width }, 1000 );

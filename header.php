@@ -13,9 +13,6 @@
 <html <?php language_attributes(); ?>>
 
 <head>
-    <title>
-        <?php  bloginfo( 'name' ); wp_title(); ?>
-    </title>
     <meta name="description" content="<?php bloginfo( 'description' ); ?>">
     <meta charset="<?php bloginfo( 'charset' ); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,80 +36,25 @@
     </div>
     <!--Mainmenu-area-->
     <header class="header">
-        <div class="mainmenu-area fixed-top" >
-            <div class="container-fluid">
-                <nav class="navbar navbar-expand-lg navbar-light pt-0" data-spy="affix" data-offset-top="100">
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#primary-menu" aria-controls="primary-menu"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+    <?php get_option( 'anila_activate_sidebar' ) == ('1') ? $withSide = 'with-side' : $withSide = '' ;?>
+        <?php if ( ! empty ( get_option( 'anila_header_type' ) )) {
+            $header = key( get_option( 'anila_header_type' ));
+            //require(locate_template('template-parts/header-'.$header.'.php'));
+            get_template_part( 'template-parts/header-'.$header.'', get_post_format() );
 
-                    <?php 
-                        wp_nav_menu( array(
-                            'theme_location'    =>  'primary',
-                            'container'         =>  'nav',
-                            'container_class'   =>  'collapse navbar-collapse',
-                            'container_id'      =>  'primary-menu',
-                            'menu_class'        =>  'navbar-nav',
-                            'walker'            =>  new Walker_Nav_Primary()
-                            
+            } else {
 
-                        ) )
+            echo 'Choose Header type from the Theme Settings';
 
-                    ?>
-
-                    <a class="navbar-brand ml-auto mr-auto" href="#">
-                        <p class="ab">The Big Lebowski</p>
-                    </a>
-                    <?php 
-                        wp_nav_menu( array(
-                            'theme_location'    =>  'secondary',
-                            'container'         =>  'nav',
-                            'container_class'   =>  'navbar-collapse',
-                            'container_id'      =>  'secondary-menu',
-                            'menu_class'        =>  'navbar-nav ml-auto right-navbar',
-                            'walker'            =>  new Walker_Nav_Primary()
-                            
-
-                        ) )
-
-                    ?>
-
-                </nav>
+            }
+        ?>
+        <?php get_option( 'anila_activate_sidebar' ) == ('1') ? get_template_part( 'template-parts/sidebar', get_post_format() ) : print(''); ?>
+        <div class="jumbotron jumbotron-fluid table <?php echo $withSide ;?>" style="<?php $withSide ? print 'background-size: calc(100% - 6rem);' : print ''; ?> background-image: url(<?php has_post_thumbnail() ? the_post_thumbnail_url() : print get_option( 'anila_header_image' ) ;  ?>)"
+            data-type="background" data-speed="2">
+            <div class="container table-cell">
+                <h1 class="display-3 text-uppercase text-center" data-type="content">
+                    <?php get_option( 'anila_header_title' ) ? print get_the_title(get_post_thumbnail_id()) : print the_title(); ?>
+                </h1>
             </div>
-            <!--Mainmenu-area/-->
-        </div>
-        <div id="carousel" class="carousel slide carousel-fade" data-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img class="container-fluid fixed-height px-0" src="<?php echo get_template_directory_uri() . '/assets/1.jpg' ?>" alt="First slide">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5>Hello From</h5>
-                        <p>the other</p>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img class="container-fluid px-0" src="<?php echo get_template_directory_uri() . '/assets/2.jpg' ?>" alt="First slide">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5>Hello From</h5>
-                        <p>the other</p>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img class="container-fluid px-0" src="<?php echo get_template_directory_uri() . '/assets/3.jpg' ?>" alt="First slide">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5>Hello From</h5>
-                        <p>the other</p>
-                    </div>
-                </div>
-            </div>
-            <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
         </div>
     </header>

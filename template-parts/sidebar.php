@@ -39,9 +39,9 @@
             </span>
         </button>
     </div>
-    <div class="sidebar-book-button">
+    <!-- <div class="sidebar-book-button">
         <button type="button" class="btn btn-secondary btn-lg border-0">Book now</button>
-    </div>
+    </div> -->
     <div class="sidebar-socials">
         <?php
             social_display();
