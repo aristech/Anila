@@ -5,41 +5,41 @@
  */
 
  namespace Inc\Settings;
- 
+
 /* ========================
- * Settings 
+ * Settings
  * ========================
  */
 
-class Settings 
+class Settings
 {
-    
-   
+
+
     function __construct(){
 
         $this   ->  themeUri            =   get_template_directory_uri();
         $this   ->  theme               =   get_template_directory();
         $this   ->  logo                =   get_option( 'anila_logo' );
         $this   ->  logosize            =   get_option( 'anila_logosize' );
-        $this   ->  slidersize            =   get_option( 'anila_slidersize' );
+        $this   ->  slider              =   get_option( 'anila_activate_slider' );
+        $this   ->  sliderimage         =   get_option( 'anila_sliderimage' );
         $this   ->  header_image        =   get_option( 'anila_header_image' );
         $this   ->  header_title        =   get_option( 'anila_header_title' );
         $this   ->  sticky              =   get_option( 'anila_sticky' );
-        $this   ->  shade              =   get_option( 'anila_shade_menu' );
-        $this   ->  sidebar             =   get_option( 'anila_activate_sidebar' ); 
-        $this   ->  slider             =   get_option( 'anila_activate_slider' ); 
+        $this   ->  shade               =   get_option( 'anila_shade_menu' );
+        $this   ->  sidebar             =   get_option( 'anila_activate_sidebar' );
         $this   ->  profile_pic         =   get_option( 'anila_profile_picture' );
         $this   ->  title               =   esc_attr( get_option( 'anila_title' ) );
-        $this   ->  description         =   esc_attr( get_option( 'anila_description' ) ); 
+        $this   ->  description         =   esc_attr( get_option( 'anila_description' ) );
         $this   ->  socials             =   array(
                             'twitter'   => esc_attr( get_option( 'anila_twitter' ) ),
                             'facebook'  => esc_attr( get_option( 'anila_facebook' ) ),
                             'google'    => esc_attr( get_option( 'anila_google' ) ),
-                        ); 
-                    
-        $this   ->  contact             =   get_option( 'anila_activate_contact' ); 
+                        );
+
+        $this   ->  contact             =   get_option( 'anila_activate_contact' );
         $this   ->  header              =   get_option( 'anila_header_type' );
-        
+
     }
     public function settings() {
         //echo $hook;
@@ -96,13 +96,16 @@ class Settings
 
         //Slider Options
         register_setting( 'anila-slider-group', 'anila_activate_slider' );
-        register_setting( 'anila-slider-group', 'anila_slidersize' );
+        register_setting( 'anila-slider-group', 'anila_sliderimage' );
+        register_setting( 'anila-slider-group', 'anila_slidertitle' );
+        register_setting( 'anila-slider-group', 'anila_slidersubtitle' );
 
         add_settings_section( 'anila_slider_settings', 'Slider Options', '', 'anila_slider' );
-        add_settings_section( 'anila_slider_content', 'Slider Content', '', 'anila_slider' );
+        add_settings_section( 'anila_slider_content', 'Slider Contents', '', 'anila_slider' );
 
         add_settings_field( 'activate-slider', 'Activate Slider', array($this, 'activate_slider'), 'anila_slider', 'anila_slider_settings');
-        add_settings_field( 'items-slider', 'Slider Items', array($this, 'slider_items'), 'anila_slider', 'anila_slider_content');
+        add_settings_field( 'items-slider', 'Slider Images', array($this, 'slider_content'), 'anila_slider', 'anila_slider_content');
+
         //add_settings_field( 'header-image', 'Global Header Image', array($this, 'header_image'), 'anila', 'anila_slider_content' );
 
         //CSS Options
@@ -123,7 +126,7 @@ class Settings
 
     function header_type()
     {
-    
+
         $formats = array( '1', '2', '3', '4' );
         $output = '';
         foreach ( $formats as $format ){
@@ -133,16 +136,16 @@ class Settings
         }
         echo $output;
     }
-    
+
     function logo()
     {
         if (!empty($this->logo)) {
             echo '<div class="add-logo-picture"><div><input type="button" class="button button-secondary btn-upload" value="Upload" id="upload-button" /><input type="button" class="button button-secondary btn-remove" value="&times;" id="remove-picture" /><input type="hidden" id="profile-picture" name="anila_logo" value="'. $this->logo .'"/></div><input class="text" type="number" name="anila_logosize" placeholder="Logo size 1% ~ 100%" value="'. filter_var($this->logosize , FILTER_SANITIZE_NUMBER_INT).'"/><img id="logo-prev" style="max-width: '. $this->logosize .';" src="'.$this->logo.'" ></div>';
         } else {
             echo '<input type="button" class="button button-secondary btn-upload" value="Upload" id="upload-button" /><input type="hidden" id="profile-picture" name="anila_logo" value="'. $this->logo .'"/>';
-        }        
+        }
     }
-    
+
     function validate($input){
         $output = $input;
         $output .= '%';
@@ -160,22 +163,22 @@ class Settings
         $name = ( @$this->shade == 1 ? 'Dark Menu' : 'Light Menu' );
         echo '<input type="checkbox" class="ios8-switch" id="shade" name="anila_shade_menu" value="1" '.$checked.' /> <label for="shade">'.$name.'</label>';
     }
-    
+
     function header_image()
     {
         if (!empty($this->header_image)) {
             echo '<div class="add-header-image"><div><input type="button" class="button button-secondary btn-upload" value="Upload" id="upload-button-image" /><input type="button" class="button button-secondary btn-remove" value="&times;" id="remove-header-image" /><input type="hidden" id="header-image" name="anila_header_image" value="'. $this->header_image .'"/><img id="header-image-prev" style="max-width:200px" src="'.$this->header_image.'" ></div>';
         } else {
             echo '<input type="button" class="button button-secondary btn-upload" value="Upload" id="upload-button-image" /><input type="hidden" id="header-image" name="anila_header_image" value="'. $this->header_image .'"/>';
-        } 
-    
+        }
+
     }
-    
+
     function header_title()
     {
         $checked = ( @$this->header_title == 1 ? 'checked' : '' );
         echo '<label> Post / Page Title </label><input type="checkbox" class="ios8-switch" id="header_title" name="anila_header_title" value="1" '.$checked.' /> <label for="header_title">Image Title</label>';
-    
+
     }
 
 
@@ -262,7 +265,7 @@ function contact_cpt(){
         'singular_name'     =>  'Message',
         'menu_name'         =>  'Messages',
         'name_admin_bar'    =>  'Message',
-        
+
     );
 
     $args = array(
@@ -302,7 +305,7 @@ function profile_picture()
         echo '<input type="button" class="button button-secondary btn-upload" value="Upload" id="upload-button" /><input type="button" class="button button-secondary btn-remove" value="&times;" id="remove-picture" /><input type="hidden" id="profile-picture" name="anila_profile_picture" value="'. $this->profile_pic .'"/>';
     } else {
         echo '<input type="button" class="button button-secondary btn-upload" value="Upload" id="upload-button" /><input type="hidden" id="profile-picture" name="anila_profile_picture" value="'. $this->profile_pic .'"/>';
-    }        
+    }
 }
 
 function sidebar_name()
@@ -330,11 +333,12 @@ function activate_slider()
     echo '<input type="checkbox" class="ios8-switch" id="activate_slider" name="anila_activate_slider" value="1" '.$checked.' /><label for="activate_slider">Activate Slider</label>';
 }
 
-function slider_items()
+function slider_content()
 {
-    if (@$this->slider == 1 ) {
-    echo '<input class="text" type="number" name="anila_slidersize" placeholder="How many slider items?" value="'. filter_var($this->slidersize , FILTER_SANITIZE_NUMBER_INT).'"/>';
-    }
+    $output = '<div class="add-slider-image"><div><input type="button" class="button button-secondary btn-upload" value="Upload" id="upload-button-slider" />
+    <input type="hidden" id="slider-image" name="anila_sliderimage" value="'. $this->sliderimage.'"/>';
+    echo $output;
+
 }
 
 
@@ -365,6 +369,6 @@ function sanitize_css($input){
     $output = esc_textarea( $input );
     return $output;
 }
-    
-}    
+
+}
 

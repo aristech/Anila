@@ -7,14 +7,14 @@ require get_template_directory() . '/inc/Admin.php';
 
 
 function social_display()
-{   
+{
     $socials   =   array(
         'facebook'  => esc_attr( get_option( 'anila_facebook' ) ),
         'twitter'   => esc_attr( get_option( 'anila_twitter' ) ),
         'google'    => esc_attr( get_option( 'anila_google' ) ),
-    ); 
+    );
     $output = '<ul>';
-    foreach ($socials as $key => $value) 
+    foreach ($socials as $key => $value)
     {
         if ($value) {
             $output .=  '<li>
