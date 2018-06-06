@@ -3,11 +3,12 @@
  * @package Anila
  *
  */
- 
+
 /* ========================
- * Header Template Page 
+ * Header Template Page
  * ========================
  */
+//require_once get_template_directory() . '/inc/functions/Socials.php';
 ?>
 <div class="sidebar">
     <div class="sidebar-wrapper container-fluid">
@@ -44,7 +45,10 @@
     </div> -->
     <div class="sidebar-socials">
         <?php
-            social_display();
+            if (class_exists('Admin')) {
+                $admin =new Admin();
+                $admin->call_socials();
+            }
         ?>
     <!-- <span class="simple-svg" data-icon="typcn-social-facebook-circular" data-inline="false"></span> -->
     </div>

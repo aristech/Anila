@@ -195,6 +195,8 @@ function set_contact_columns( $columns )
     $newColumns =   array(
         'title'     =>  'Name',
         'message'   =>  'Message',
+        'checkin'   =>  'Check In',
+        'checkout'   =>  'Check Out',
         'email'     =>  'Email',
         'date'      =>  'Date',
 
@@ -212,6 +214,14 @@ function contact_custom_column($column, $post_id)
         case 'email':
             echo get_post_meta( $post_id, '_contact_email_value_key', true );
             break;
+
+        case 'checkin':
+            echo get_post_meta( $post_id, '_contact_checkin_value_key', true );
+            break;
+
+        case 'checkout':
+            echo get_post_meta( $post_id, '_contact_checkout_value_key', true );
+            break;
     }
 }
 
@@ -220,36 +230,62 @@ function contact_custom_column($column, $post_id)
 function contact_add_metabox()
 {
     add_meta_box( 'contact_email', 'User email', array($this,'contact_email_callback'), 'anila_contact', 'normal', 'high' );
+    add_meta_box( 'contact_checkin', 'Check In Date', array($this,'contact_checkin_callback'), 'anila_contact', 'normal', 'high' );
+    add_meta_box( 'contact_checkout', 'Check Out Date', array($this,'contact_checkout_callback'), 'anila_contact', 'normal', 'high' );
 }
 
 function contact_email_callback($post)
 {
-    wp_nonce_field( 'save_email_data', 'meta_box_contact_email_nonce' );
+    wp_nonce_field( 'anila_save_email_data', 'anila_contact_email_meta_box_nonce' );
     $value = get_post_meta( $post->ID, '_contact_email_value_key', true );
     //var_dump(get_post_meta($post->ID));
-    echo '<label for="anila_contact_email_field"> User Emai Address: </label>';
+    echo '<label for="anila_contact_email_field"> User Email Address: </label>';
     echo '<input class="regular-text" type="email" id="anila_contact_email_field" name="anila_contact_email_field" value="'.esc_attr( $value ).'" size="25"/>';
 }
-function save_email_data($post_id)
+
+function contact_checkin_callback($post)
 {
-    if( !isset( $_POST['meta_box_contact_email_nonce'])){
-        return;
-    }
-    if(! wp_verify_nonce( 'meta_box_contact_email_nonce', 'save_email_data' )){
-        return;
-    }
-    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ) {
-       return;
-    }
-    if (!current_user_can( 'edit_post', $post_id )) {
-        return;
-    }
-    if (! isset( $_POST['anila_contact_email_field'])) {
-        return;
+    wp_nonce_field( 'anila_save_checkin_data', 'anila_contact_checkin_meta_box_nonce' );
+    $value = get_post_meta( $post->ID, '_contact_checkin_value_key', true );
+    //var_dump(get_post_meta($post->ID));
+    echo '<label for="checkin-picker"> User Checkin Date: </label>';
+    echo '<input type="text" id="checkin-picker" name="anila_contact_checkin_field" placeholder="dd mmm yyyy" value="'.esc_attr( $value ).'" size="25"/>';
+}
+
+function contact_checkout_callback($post)
+{
+    wp_nonce_field( 'anila_save_checkout_data', 'anila_contact_checkout_meta_box_nonce' );
+    $value = get_post_meta( $post->ID, '_contact_checkout_value_key', true );
+    //var_dump(get_post_meta($post->ID));
+    echo '<label for="checkout-picker"> User Checkout Date: </label>';
+    echo '<input type="text" id="checkout-picker" name="anila_contact_checkout_field" placeholder="dd mmm yyyy" value="'.esc_attr( $value ).'" size="25"/>';
+}
+
+function anila_save_email_data($post_id)
+{
+    $metaBoxes = array( 'email', 'checkin', 'checkout' );
+
+    foreach ($metaBoxes as $meta) {
+        if( !isset( $_POST['anila_contact_'.$meta.'_meta_box_nonce'])){
+            return;
+        }
+        if(! wp_verify_nonce( $_POST['anila_contact_'.$meta.'_meta_box_nonce'], 'anila_save_'.$meta.'_data' )){
+            return;
+        }
+        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ) {
+           return;
+        }
+        if (!current_user_can( 'edit_post', $post_id )) {
+            return;
+        }
+        if (! isset( $_POST['anila_contact_'.$meta.'_field'])) {
+            return;
+        }
+
+        $data = sanitize_text_field( $_POST['anila_contact_'.$meta.'_field'] );
+        update_post_meta( $post_id, '_contact_'.$meta.'_value_key', $data );
     }
 
-    $data = sanitize_text_field( $_POST['anila_contact_email_field'] );
-    update_post_meta( $post_id, '_contact_email_value_key', $data );
 
 }
 
@@ -335,7 +371,7 @@ function activate_slider()
 
 function slider_content()
 {
-    $output = '<div class="add-slider-image"><div><input type="button" class="button button-secondary btn-upload" value="Upload" id="upload-button-slider" />
+    $output = '<div class="add-slider-image"><div><input type="button" class="button button-secondary btn-upload-slider" value="Upload" id="upload-button-slider" />
     <input type="hidden" id="slider-image" name="anila_sliderimage" value="'. $this->sliderimage.'"/>';
     echo $output;
 
