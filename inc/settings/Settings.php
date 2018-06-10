@@ -66,10 +66,13 @@ class Settings
 
         //Contact Form Options
         register_setting( 'anila-contact-group', 'anila_activate_contact' );
+        register_setting( 'anila-calendar-group', 'anila_calendar' );
 
         add_settings_section( 'contact-section', '', '', 'anila_contact' );
+        add_settings_section( 'calendar-section', 'Calendar', '', 'anila_contact' );
 
         add_settings_field( 'activate-form', 'Add or remove custom contact form', array($this, 'activate_contact'), 'anila_contact', 'contact-section' );
+        add_settings_field( 'calendar-area', 'Booking visualisation', array($this, 'calendar_callback'), 'anila_contact', 'contact-section' );
 
 
 
@@ -197,6 +200,8 @@ function set_contact_columns( $columns )
         'message'   =>  'Message',
         'checkin'   =>  'Check In',
         'checkout'   =>  'Check Out',
+        'adults'     =>  'Adults',
+        'children'     =>  'Children',
         'email'     =>  'Email',
         'date'      =>  'Date',
 
@@ -222,6 +227,14 @@ function contact_custom_column($column, $post_id)
         case 'checkout':
             echo get_post_meta( $post_id, '_contact_checkout_value_key', true );
             break;
+
+        case 'adults':
+            echo get_post_meta( $post_id, '_contact_adults_value_key', true );
+            break;
+
+        case 'children':
+            echo get_post_meta( $post_id, '_contact_children_value_key', true );
+            break;
     }
 }
 
@@ -232,6 +245,8 @@ function contact_add_metabox()
     add_meta_box( 'contact_email', 'User email', array($this,'contact_email_callback'), 'anila_contact', 'normal', 'high' );
     add_meta_box( 'contact_checkin', 'Check In Date', array($this,'contact_checkin_callback'), 'anila_contact', 'normal', 'high' );
     add_meta_box( 'contact_checkout', 'Check Out Date', array($this,'contact_checkout_callback'), 'anila_contact', 'normal', 'high' );
+    add_meta_box( 'contact_adults', 'Adults', array($this,'contact_adults_callback'), 'anila_contact', 'normal', 'high' );
+    add_meta_box( 'contact_children', 'Children', array($this,'contact_children_callback'), 'anila_contact', 'normal', 'high' );
 }
 
 function contact_email_callback($post)
@@ -261,9 +276,27 @@ function contact_checkout_callback($post)
     echo '<input type="text" id="checkout-picker" name="anila_contact_checkout_field" placeholder="dd mmm yyyy" value="'.esc_attr( $value ).'" size="25"/>';
 }
 
+function contact_adults_callback($post)
+{
+    wp_nonce_field( 'anila_save_adults_data', 'anila_contact_adults_meta_box_nonce' );
+    $value = get_post_meta( $post->ID, '_contact_adults_value_key', true );
+    //var_dump(get_post_meta($post->ID));
+    echo '<label for="checkout-picker"> Adults: </label>';
+    echo '<input type="number" id="adults" name="anila_contact_adults_field" value="'.esc_attr( $value ).'"';
+}
+
+function contact_children_callback($post)
+{
+    wp_nonce_field( 'anila_save_children_data', 'anila_contact_children_meta_box_nonce' );
+    $value = get_post_meta( $post->ID, '_contact_children_value_key', true );
+    //var_dump(get_post_meta($post->ID));
+    echo '<label for="checkout-picker"> Children: </label>';
+    echo '<input type="number" id="children" name="anila_contact_children_field" value="'.esc_attr( $value ).'"';
+}
+
 function anila_save_email_data($post_id)
 {
-    $metaBoxes = array( 'email', 'checkin', 'checkout' );
+    $metaBoxes = array( 'email', 'checkin', 'checkout', 'adults', 'children' );
 
     foreach ($metaBoxes as $meta) {
         if( !isset( $_POST['anila_contact_'.$meta.'_meta_box_nonce'])){
@@ -295,6 +328,13 @@ function activate_contact()
     echo '<input type="checkbox" class="ios8-switch" id="activate_contact" name="anila_activate_contact" value="1" '.$checked.' /><label for="activate_contact">Activate Mesages Plugin</label>';
 }
 
+function calendar_callback()
+{
+    if (@$this->contact == 1) {
+        echo '<div id="calendar" style="width: 80%; display: inline-block;"></div>';
+    }
+}
+
 function contact_cpt(){
     $labels = array(
         'name'              =>  'Messages',
@@ -308,6 +348,7 @@ function contact_cpt(){
         'labels'            =>  $labels,
         'show_ui'           =>  true,
         'show_in_menu'      =>  true,
+        'show_in_rest'      =>  true,
         'capability_type'   =>  'post',
         'hierarchical'      =>  false,
         'menu_position'     =>  26,

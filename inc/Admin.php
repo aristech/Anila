@@ -68,7 +68,10 @@ class Admin {
             add_shortcode( 'booking_form', array($this->shortcodes, 'booking_form'));
         }
 
-
+        register_rest_field( 'anila_contact', 'metadata', array(
+            'get_callback' => function ( $data ) {
+                return get_post_meta( $data['id'], '', '' );
+            }, ));
 
 
     }

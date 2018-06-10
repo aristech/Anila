@@ -231,7 +231,10 @@ jQuery(document).ready(function($) {
     var form = $(this);
     checkin = form.find("#checkin-picker").val();
     checkout = form.find("#checkout-picker").val();
+    adults = form.find("#wh-adults").val();
+    children = form.find("#wh-children").val();
   });
+
   $("#modal-contact").on("submit", function(e) {
     e.preventDefault();
     var form = $(this);
@@ -241,7 +244,7 @@ jQuery(document).ready(function($) {
       ajaxurl = form.data("url");
 
     if (name === "" || email == "" || message == "") {
-      console.log("Required inputs are empty");
+      console.log(adults + " Required inputs are empty " + children);
       return;
     }
 
@@ -251,6 +254,8 @@ jQuery(document).ready(function($) {
       data: {
         checkin: checkin,
         checkout: checkout,
+        adults: adults,
+        children: children,
         name: name,
         email: email,
         message: message,

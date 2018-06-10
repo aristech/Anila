@@ -161,6 +161,68 @@ jQuery(document).ready(function($) {
 
   pickerSetup("checkin", "+0");
   pickerSetup("checkout", "+1");
+
+  var blogUrl = "/wp-json/wp/v2/anila_contact";
+  blogUrl = blogUrl.substring(blogUrl.indexOf("wp-json") - 1);
+  var myJson = new Object();
+  $.getJSON(blogUrl, function(data) {
+    $.each(data, function(i, item) {
+      var ud = data[i].metadata._contact_checkin_value_key;
+      var ds = moment(ud, "DD MMM YYYY").format("YYYY-MM-DD");
+      myJson.start = ds;
+      console.log(ds);
+    });​
+  });
+
+  $("#calendar").fullCalendar({
+    header: {
+      left: "prev,next today",
+      center: "title",
+      right: "month,agendaWeek,agendaDay"
+    }, // buttons for switching between views
+    editable: true,
+
+    views: {
+      month: {
+        // name of view
+        titleFormat: "DD, MM, YYYY"
+        // other view-specific options here
+      },
+      week: {
+        // name of view
+        titleFormat: "DD, MM, YYYY",
+        defaultView: "month",
+        slotDuration: "04:00:00"
+      }
+    },
+    dayClick: function(date, jsEvent, view) {
+      console.log("clicked on " + date.format());
+    },
+    events: function(start, end, timezone, callback) {
+      $.getJSON(blogUrl, function(data) {
+        var events = [];
+        $.each(data, function(i, item) {
+          var ud = data[i].metadata._contact_checkin_value_key;
+          var ds = moment(ud, "DD MMM YYYY").format("YYYY-MM-DD");
+          myJson.start = ds;
+          events.push({
+            title: 'titlee',
+            start: ds // will be parsed
+          });
+        });​
+        callback(events);
+      });
+    }
+
+
+    // events: [
+    //   {
+    //     title  : 'event1',
+    //     start  : myJson.start
+    //   }
+    // ]
+
+  });
 });
 var editor = ace.edit("customCss");
 editor.setTheme("ace/theme/monokai");
