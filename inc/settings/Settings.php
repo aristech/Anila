@@ -199,9 +199,9 @@ function set_contact_columns( $columns )
         'title'     =>  'Name',
         'message'   =>  'Message',
         'checkin'   =>  'Check In',
-        'checkout'   =>  'Check Out',
-        'adults'     =>  'Adults',
-        'children'     =>  'Children',
+        'checkout'  =>  'Check Out',
+        'adults'    =>  'Adults',
+        'children'  =>  'Children',
         'email'     =>  'Email',
         'date'      =>  'Date',
 
@@ -264,7 +264,7 @@ function contact_checkin_callback($post)
     $value = get_post_meta( $post->ID, '_contact_checkin_value_key', true );
     //var_dump(get_post_meta($post->ID));
     echo '<label for="checkin-picker"> User Checkin Date: </label>';
-    echo '<input type="text" id="checkin-picker" name="anila_contact_checkin_field" placeholder="dd mmm yyyy" value="'.esc_attr( $value ).'" size="25"/>';
+    echo '<input type="text" id="checkin-picker" name="anila_contact_checkin_field" value="'.esc_attr( $value ).'" size="25"/>';
 }
 
 function contact_checkout_callback($post)

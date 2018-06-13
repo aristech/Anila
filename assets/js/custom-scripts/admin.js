@@ -152,62 +152,89 @@ jQuery(document).ready(function($) {
         numberOfMonths: 1,
         mandatory: true,
         firstDay: 1,
-        minDate: checkin ? 0 : 1,
+        //minDate: checkin ? 0 : 1,
         maxDate: "+2y"
       });
-      el.datepicker("setDate", date);
+      //el.datepicker("setDate", date);
     }
   }
 
   pickerSetup("checkin", "+0");
   pickerSetup("checkout", "+1");
 
+  /* FULLCALENDAR */
   var blogUrl = "/wp-json/wp/v2/anila_contact";
   blogUrl = blogUrl.substring(blogUrl.indexOf("wp-json") - 1);
-  var myJson = new Object();
-  $.getJSON(blogUrl, function(data) {
-    $.each(data, function(i, item) {
-      var ud = data[i].metadata._contact_checkin_value_key;
-      var ds = moment(ud, "DD MMM YYYY").format("YYYY-MM-DD");
-      myJson.start = ds;
-      console.log(ds);
-    });​
-  });
 
   $("#calendar").fullCalendar({
+    timeFormat: ' ',
     header: {
       left: "prev,next today",
       center: "title",
-      right: "month,agendaWeek,agendaDay"
+      right: "month,basicWeek,agendaDay"
     }, // buttons for switching between views
     editable: true,
+
 
     views: {
       month: {
         // name of view
-        titleFormat: "DD, MM, YYYY"
+        titleFormat: "DD, MMM, YYYY"
         // other view-specific options here
       },
       week: {
         // name of view
-        titleFormat: "DD, MM, YYYY",
-        defaultView: "month",
-        slotDuration: "04:00:00"
+
+        titleFormat: "DD, MMM, YYYY",
+
+        // defaultView: "timelineDay",
+        // scrollTime: "12:00:00",
+      },
+      day: {
+        displayEventTime : true,
+        slotDuration: '04:00:00',
+        defaultView: 'timelineDay',
+        duration: { days: 3 }
       }
     },
     dayClick: function(date, jsEvent, view) {
-      console.log("clicked on " + date.format());
+      console.log(day2.diff(day1, 'days') + adjust);
     },
     events: function(start, end, timezone, callback) {
       $.getJSON(blogUrl, function(data) {
         var events = [];
+        var back = ["red","pink","purple", "indigo", "blue", "light blue", "cyan", "green", "teal", "orange", "amber", "brown", "grey", "blue grey"];
+
         $.each(data, function(i, item) {
-          var ud = data[i].metadata._contact_checkin_value_key;
-          var ds = moment(ud, "DD MMM YYYY").format("YYYY-MM-DD");
-          myJson.start = ds;
+          var rand = back[Math.floor(Math.random() * back.length)];
+          var name = data[i].title.rendered;
+          var dateIn = moment(data[i].metadata._contact_checkin_value_key,
+             "DD MMM YYYY").format("YYYY-MM-DD");
+          var dateOut = moment(data[i].metadata._contact_checkout_value_key,
+              "DD MMM YYYY").format("YYYY-MM-DD");
+          var nights = moment(dateOut).diff(dateIn, 'days');
+
+          //myJson.start = ds;
           events.push({
-            title: 'titlee',
-            start: ds // will be parsed
+            title: name + " staying for " + nights + " nights",
+            start: dateIn+'T12:00:00',
+            end: dateOut+'T12:00:00',// will be parsed
+            color: rand,     // an option!
+            textColor: "#fff",
+          //   eventAfterRender: function(event, element, view) {
+          //     /**
+          //      * get the width of first day slot in calendar table
+          //      * next to event container div
+          //      */
+          //     var containerWidth = jQuery(element).offsetParent()
+          //                          .siblings("table").find(".fc-day-content").width();
+
+          //     // half a day
+          //     var elementWidth = parseInt(containerWidth / 2);
+
+          //     // set width of element
+          //     jQuery(element).css('width', elementWidth + "px");
+          // }
           });
         });​
         callback(events);
