@@ -57,6 +57,7 @@ class Admin {
         add_theme_support( 'post-thumbnails' );
         add_action( 'wp_ajax_nopriv_anila_save_contact', array($this->ajax, 'anila_save_contact' ) );
         add_action( 'wp_ajax_anila_save_contact', array($this->ajax, 'anila_save_contact' ) );
+        add_filter( 'rest_authentication_errors', array($this, 'anila_disable_rest_endpoints') );
         //add_action( 'enqueue_block_assets', array($this->RegisterBlocks,'my_block_cgb_block_assets' ));
         //add_action( 'enqueue_block_editor_assets', array($this->RegisterBlocks, 'my_block_cgb_editor_assets' ));
         if( @$this->Settings->contact == 1) {
@@ -67,7 +68,7 @@ class Admin {
             add_action( 'save_post', array($this->Settings, 'anila_save_email_data'));
             add_shortcode( 'booking_form', array($this->shortcodes, 'booking_form'));
         }
-
+        // Enable Rest Response for custom fields
         register_rest_field( 'anila_contact', 'metadata', array(
             'get_callback' => function ( $data ) {
                 return get_post_meta( $data['id'], '', '' );
@@ -75,7 +76,13 @@ class Admin {
 
 
     }
-
+    //Dissable Rest Api for non loged in users
+    function anila_disable_rest_endpoints( $access ) {
+        if( ! is_user_logged_in() && ! is_admin() ) {
+            return new WP_Error( 'rest_cannot_access', __( 'Only Administrators can access the REST API.', 'disable-json-api' ), array( 'status' => rest_authorization_required_code() ) );
+        }
+      return $access;
+    }
 
     // Remove version number of wordpress
     function removeVersion($src)
@@ -91,7 +98,6 @@ class Admin {
     // Remove Meta version
     function removeMetaVersion()
     {
-
         return '';
     }
 
@@ -112,7 +118,7 @@ class Admin {
         $mimes['svg'] = 'image/svg+xml';
         return $mimes;
     }
-
+    //Show Social icons
     function call_socials(){
         $socials = $this->socials->social_display();
         echo $socials;

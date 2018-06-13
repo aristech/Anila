@@ -174,21 +174,12 @@ jQuery(document).ready(function($) {
       right: "month,basicWeek,agendaDay"
     }, // buttons for switching between views
     editable: true,
-
-
     views: {
       month: {
-        // name of view
         titleFormat: "DD, MMM, YYYY"
-        // other view-specific options here
       },
       week: {
-        // name of view
-
         titleFormat: "DD, MMM, YYYY",
-
-        // defaultView: "timelineDay",
-        // scrollTime: "12:00:00",
       },
       day: {
         displayEventTime : true,
@@ -200,13 +191,26 @@ jQuery(document).ready(function($) {
     dayClick: function(date, jsEvent, view) {
       console.log(day2.diff(day1, 'days') + adjust);
     },
+    eventClick: function(calEvent, jsEvent, view) {
+      window.location = 'post.php?post=' + calEvent.id + '&action=edit';
+
+    },
+    eventRender: function (event, element) {
+      element.html('');
+      element.append(
+          moment(event.start._i).format("MMM Do") + '<br/>'
+          + event.title + '<br/>' + '<span class="end-date">' + moment(event.end._i).format("MMM Do") + '</span>'
+      );
+      var eventDay = $(".fc-day");
+    },
     events: function(start, end, timezone, callback) {
       $.getJSON(blogUrl, function(data) {
         var events = [];
-        var back = ["red","pink","purple", "indigo", "blue", "light blue", "cyan", "green", "teal", "orange", "amber", "brown", "grey", "blue grey"];
+        var back = ["red","#c36878","purple", "indigo", "blue", "light blue", "#09a5a5", "green", "teal", "#af7a19", "amber", "brown", "grey", "blue grey"];
 
         $.each(data, function(i, item) {
           var rand = back[Math.floor(Math.random() * back.length)];
+          var id = data[i].id;
           var name = data[i].title.rendered;
           var dateIn = moment(data[i].metadata._contact_checkin_value_key,
              "DD MMM YYYY").format("YYYY-MM-DD");
@@ -216,38 +220,17 @@ jQuery(document).ready(function($) {
 
           //myJson.start = ds;
           events.push({
+            id: id,
             title: name + " staying for " + nights + " nights",
             start: dateIn+'T12:00:00',
             end: dateOut+'T12:00:00',// will be parsed
             color: rand,     // an option!
             textColor: "#fff",
-          //   eventAfterRender: function(event, element, view) {
-          //     /**
-          //      * get the width of first day slot in calendar table
-          //      * next to event container div
-          //      */
-          //     var containerWidth = jQuery(element).offsetParent()
-          //                          .siblings("table").find(".fc-day-content").width();
-
-          //     // half a day
-          //     var elementWidth = parseInt(containerWidth / 2);
-
-          //     // set width of element
-          //     jQuery(element).css('width', elementWidth + "px");
-          // }
           });
         });​
         callback(events);
       });
     }
-
-
-    // events: [
-    //   {
-    //     title  : 'event1',
-    //     start  : myJson.start
-    //   }
-    // ]
 
   });
 });

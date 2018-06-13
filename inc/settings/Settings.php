@@ -331,7 +331,7 @@ function activate_contact()
 function calendar_callback()
 {
     if (@$this->contact == 1) {
-        echo '<div id="calendar" style="width: 80%; display: inline-block;"></div>';
+        echo '<div id="calendar" style="display: inline-block;"></div>';
     }
 }
 
@@ -349,11 +349,12 @@ function contact_cpt(){
         'show_ui'           =>  true,
         'show_in_menu'      =>  true,
         'show_in_rest'      =>  true,
+        'view_item'         =>  true,
         'capability_type'   =>  'post',
         'hierarchical'      =>  false,
         'menu_position'     =>  26,
         'supports'          =>  array( 'title', 'editor', 'author' ),
-        'menu_icon'         =>  'dashicons-email'
+        'menu_icon'         =>  'dashicons-email',
     );
     register_post_type( 'anila_contact', $args );
 }

@@ -14,7 +14,7 @@
 <h1> <?php echo wp_get_theme(); ?> Contact Options</h1>
 <?php settings_errors(); ?>
 
-<p>Use tis <strong>Shortcode</strong> to activate the Booking Form</p>
+<p>Use this <strong>Shortcode</strong> to activate the Booking Form</p>
 <p><code>[booking_form]</code></p>
 
 <div class="admin-content">
